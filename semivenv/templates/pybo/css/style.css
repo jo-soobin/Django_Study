@@ -210,12 +210,14 @@ a.boxclose{
 .rateit span{
 	height:18px;
 	width:76px;
-	background:url(../images/start_05.png) no-repeat 0px 0px; 
+	background:url(../images/001.png) no-repeat 0px 0px; 
 	display:inline-block;
 }
+/*
 .rateit span:hover{
 	background:url(../images/start-rateh.png) no-repeat 0px 0px; 
 }
+*/
 .post-basic-info{
 	padding: 7% 7% 5% 7%;
 }
