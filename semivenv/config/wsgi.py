@@ -11,6 +11,7 @@ import os
 from django.core.wsgi import get_wsgi_application
 sys.path.append('C:/projects')
 
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
