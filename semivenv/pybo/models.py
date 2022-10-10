@@ -2,7 +2,9 @@ from django.db import models
 
 # Create your models here.
 class review(models.Model):
+    mvRank = models.TextField()     # 영화랭크
     mvcode = models.TextField()     # 영화코드
+    mvNm = models.TextField()     # 영화이름
     index = models.IntegerField()   # index
     review = models.TextField()     # 리뷰
     star = models.IntegerField()    # 별점
