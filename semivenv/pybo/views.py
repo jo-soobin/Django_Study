@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
-from .diyapi import NaverMovieCrawling
+from .diyapi import NaverMovieCrawling, NaverMovieCrawling2
 import pandas as pd
 
 def index(request):
@@ -28,6 +28,14 @@ def index2(request):
 def reviewCrawling(request):
     
     NaverMovieCrawling.reviewCrawling()
+
+    context = {'status': '성공'}
+
+    return render(request, 'pybo/main2.html', context)
+
+def reviewCrawling2(request):
+    
+    NaverMovieCrawling2.reviewCrawling()
 
     context = {'status': '성공'}
 

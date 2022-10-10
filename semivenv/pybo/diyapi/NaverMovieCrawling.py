@@ -162,6 +162,7 @@ def reviewCrawling() :
         Data = []
         for code, title in zip(codes, titles):
             count += 1
+            mvidx = 0
             for i in range(1,6): # 1~6 페이지 리뷰 수집
                 res = req.get('https://movie.naver.com/movie/bi/mi/pointWriteFormList.naver?code=' + code + '&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false&page=' + str(i))
                 soup = bs(res.text, 'lxml')  # lxml은 구문을 분석하기 위한 파서(parser) # html 형식으로 변환
@@ -171,7 +172,8 @@ def reviewCrawling() :
                 review = soup.select("div.score_result > ul > li") # '관람객' 요소가 삭제된 해당 요소 선택 후 추출
 
                 emoji = '0' #이모티콘 import 해서 0 부정 1 긍정
-                for idx, i in enumerate(review):
+                for i in review:
+                    mvidx += 1
                     point = i.select_one('.star_score > em').text.strip() # 평점
                     ment = i.select_one('.score_reple span[id^=_filtered_ment_]').text.strip().replace('\t',"") # 리뷰 내용 개행(공백)문자 삭제
                     Data.append(f"{count}\t{code}\t{title}\t{point}\t{ment}") # 번호/코드/제목/평점/리뷰 순서로 출력
@@ -180,7 +182,7 @@ def reviewCrawling() :
                         imgtmp = imgtmp['imgpath'].sample(n=1).values[0]
                     else :
                         imgtmp = 'https://ssl.pstatic.net/static/movie/2012/06/dft_img203x290.png'
-                    tmp = pd.DataFrame({'mvRank':[count], 'mvcode':[code], 'mvNm':[title], 'index':[idx], 'review':[ment], 'star':[point], 'emoji':[emoji], 'img':[imgtmp], 'create_date':[today]})
+                    tmp = pd.DataFrame({'mvRank':[count], 'mvcode':[code], 'mvNm':[title], 'index':[mvidx], 'review':[ment], 'star':[point], 'emoji':[emoji], 'img':[imgtmp], 'create_date':[today]})
                     df = pd.concat([df, tmp])
 
 
