@@ -10,7 +10,7 @@ def index(request):
     
     MovieInfo = review.objects.all()
      
-    context = {'question_list': MovieInfo}
+    context = {'MovieInfo': MovieInfo}
 
     return render(request, 'pybo/main.html', context)
 

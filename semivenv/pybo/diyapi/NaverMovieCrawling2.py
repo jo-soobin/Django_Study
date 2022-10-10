@@ -44,8 +44,8 @@ def reviewCrawling() :
     #import chromedriver_autoinstaller
     chrome_path = chromedriver_autoinstaller.install()
     if chrome_path is None or chrome_path == '' :
-        chrome_path = 'C:\\venvs\\venvsemi\\lib\\site-packages\\chromedriver_autoinstaller\\105\\chromedriver.exe'
-
+        # chrome_path = 'C:\\venvs\\venvsemi\\lib\\site-packages\\chromedriver_autoinstaller\\105\\chromedriver.exe'
+        chrome_path = 'C:\\venvs\\venvsemi\\lib\\site-packages\\chromedriver_autoinstaller\\106\\chromedriver.exe'
     print('chrome_path :'+chrome_path)
     driver = webdriver.Chrome(chrome_path, options=option)
 
