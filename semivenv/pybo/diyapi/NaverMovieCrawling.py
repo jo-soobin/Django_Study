@@ -206,6 +206,8 @@ def reviewCrawling() :
 
         driver.quit()
         
+        reviewModel.objects.all().delete()
+
         for i in range(len(df)) :
             data = df.iloc[i]
             r = reviewModel(mvRank=data['mvRank'], mvcode=data['mvcode'], mvNm=data['mvNm'], index=data['index'], review=data['review'], star=data['star'], emoji=data['emoji'], img=data['img'], create_date=today)
