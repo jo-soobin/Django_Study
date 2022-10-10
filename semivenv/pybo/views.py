@@ -4,16 +4,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .diyapi import NaverMovieCrawling, NaverMovieCrawling2
 import pandas as pd
+from .models import review
 
 def index(request):
     
-
-    '''
-    수빈, 지예 개발
-
-    '''
-
-    context = {'question_list': 'question_list'}
+    MovieInfo = review.objects.all()
+     
+    context = {'question_list': MovieInfo}
 
     return render(request, 'pybo/main.html', context)
 
