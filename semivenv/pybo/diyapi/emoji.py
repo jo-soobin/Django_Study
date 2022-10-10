@@ -14,4 +14,4 @@ import pandas
 
 # 감정 분류 및 이모티콘 랜덤 출력 함수
 def sentiment_predict(new_sentence):
-  return 1
+  return '1'

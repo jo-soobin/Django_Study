@@ -37,3 +37,4 @@ def reviewCrawling2(request):
     context = {'status': '성공'}
 
     return render(request, 'pybo/main2.html', context)
+

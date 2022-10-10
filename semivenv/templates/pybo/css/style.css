@@ -207,12 +207,14 @@ a.boxclose{
 .post-share span:hover{
 	background:url(../images/facebookh.png) no-repeat 0px 0px;
 }
+
 .rateit span{
 	height:18px;
 	width:76px;
 	background:url(../images/001.png) no-repeat 0px 0px; 
 	display:inline-block;
 }
+
 /*
 .rateit span:hover{
 	background:url(../images/start-rateh.png) no-repeat 0px 0px; 

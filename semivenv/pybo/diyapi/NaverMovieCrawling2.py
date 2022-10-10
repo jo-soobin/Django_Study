@@ -23,6 +23,7 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as bs
 from django.utils import timezone
 from pybo.models import review as reviewModel
+from . import emoji
 
 # BeautifulSoup은 response.text를 통해 가져온 HTML 문서를 탐색해서 원하는 부분을 뽑아내는 역할 (컴퓨터가 이해할 수 있는 html 언어로 변경)
 
@@ -42,7 +43,8 @@ def reviewCrawling() :
     option.add_argument("headless")
     
     #import chromedriver_autoinstaller
-    chrome_path = chromedriver_autoinstaller.install()
+    # chrome_path = chromedriver_autoinstaller.install()
+    chrome_path = ''
     if chrome_path is None or chrome_path == '' :
         # chrome_path = 'C:\\venvs\\venvsemi\\lib\\site-packages\\chromedriver_autoinstaller\\105\\chromedriver.exe'
         chrome_path = 'C:\\venvs\\venvsemi\\lib\\site-packages\\chromedriver_autoinstaller\\106\\chromedriver.exe'
@@ -190,9 +192,12 @@ def reviewCrawling() :
                     else :
                         imgtmp = 'https://ssl.pstatic.net/static/movie/2012/06/dft_img203x290.png'
                     
-                    emoji = '1' #이모티콘 import 해서 0 부정 1 긍정
+                    if i == 0 :
+                        mvemoji = 0
+                    else :
+                        mvemoji = emoji.sentiment_predict(ment) #이모티콘 import 해서 0 부정 1 긍정
                     
-                    tmp = pd.DataFrame({'mvRank':[mvRank], 'mvcode':[code], 'mvNm':[title], 'index':[mvidx], 'review':[ment], 'star':[point], 'emoji':[emoji], 'img':[imgtmp], 'create_date':[today]})
+                    tmp = pd.DataFrame({'mvRank':[mvRank], 'mvcode':[code], 'mvNm':[title], 'index':[mvidx], 'review':[ment], 'star':[point], 'emoji':[mvemoji], 'img':[imgtmp], 'create_date':[today]})
                     df = pd.concat([df, tmp])
 
         '''
@@ -223,3 +228,4 @@ def reviewCrawling() :
     except Exception as ex:
         print('에러가 발생 했습니다', ex)
         driver.quit()
+

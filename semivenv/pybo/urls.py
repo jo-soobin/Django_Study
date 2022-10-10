@@ -12,4 +12,5 @@ urlpatterns = [
     path('test', views.index2),
     path('crawling', views.reviewCrawling),
     path('crawling2', views.reviewCrawling2),
+    
 ] 
