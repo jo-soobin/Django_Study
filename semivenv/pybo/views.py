@@ -17,9 +17,11 @@ def index(request):
 
 def index2(request):
     
-    context = {'question_list': 'question_list'}
+    MovieInfo = review.objects.all()
+     
+    context = {'MovieInfo': MovieInfo}
 
-    return render(request, 'pybo/main2.html', context)
+    return render(request, 'pybo/main_kjy.html.html', context)
 
 
 def reviewCrawling(request):

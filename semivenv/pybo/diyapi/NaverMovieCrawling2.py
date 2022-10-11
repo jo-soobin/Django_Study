@@ -55,6 +55,7 @@ def reviewCrawling() :
 
     mvdf = pd.DataFrame(columns=['mvcode', 'index', 'imgpath'])
     df = pd.DataFrame(columns=['mvRank','mvcode', 'mvNm', 'index', 'review', 'star', 'emoji', 'img', 'create_date', 'viewIdx'])
+    
     today = timezone.now()
 
     try:
@@ -199,8 +200,13 @@ def reviewCrawling() :
                         mvemoji = 0
                     else :
                         mvemoji = emoji.sentiment_predict(ment) #이모티콘 import 해서 0 부정 1 긍정
+                    print(mvemoji)
+
+                    mvemo = 1
+                    if int(point) < 5 :
+                        mvemo = 0
                     
-                    tmp = pd.DataFrame({'mvRank':[mvRank], 'mvcode':[code], 'mvNm':[title], 'index':[mvidx], 'review':[ment], 'star':[point], 'emoji':[mvemoji], 'img':[imgtmp], 'create_date':[today]})
+                    tmp = pd.DataFrame({'mvRank':[mvRank], 'mvcode':[code], 'mvNm':[title], 'index':[mvidx], 'review':[ment], 'star':[point], 'emoji':[mvemo], 'img':[imgtmp], 'create_date':[today]})
                     df = pd.concat([df, tmp])
 
         '''
