@@ -25,7 +25,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<!---start-click-drop-down-menu----->
 	<script src="{% static 'js/jquery.min.js' %}"></script>
 	<!----start-dropdown--->
+	<script>
+		$.ajaxSetup({
+		  headers: { "X-CSRFToken": '{{csrf_token}}' }
+		});
+	</script>
 	<script type="text/javascript">
+		paging = 1
 		var $ = jQuery.noConflict();
 		$(function () {
 			$('#activator').click(function () {
@@ -47,6 +53,19 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			});
 
 		});
+		/*
+		$(window).scroll(function(){
+			var scrT = $(window).scrollTop();
+			console.log(scrT); //스크롤 값 확인용
+			if(scrT == $(document).height() - $(window).height()){
+				//스크롤이 끝에 도달했을때 실행될 이벤트
+				paging += 1
+				console.log(paging)
+			} else {
+				//아닐때 이벤트
+			}
+		}
+		*/
 	</script>
 	<!----//End-dropdown--->
 	<!---//End-click-drop-down-menu----->
@@ -163,8 +182,32 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				// Check if we're within 100 pixels of the bottom edge of the broser window.
 				var winHeight = window.innerHeight ? window.innerHeight : $window.height(), // iphone fix
 					closeToBottom = ($window.scrollTop() + winHeight > $document.height() - 100);
+				
+				var scrT = ($window).scrollTop();
+				if(scrT == ($document).height() - ($window).height()){
+					//스크롤이 끝에 도달했을때 실행될 이벤트
+					paging += 1;
+					console.log(paging);
+					console.log('ajax')
+					$.ajax({
+						type:'post',
+						url:'{% url "test" %}',
+						data : { 'page':paging },
+        				success:function(data){
+							$tiles.append(data);
+
+							applyLayout();
+
+						}
+					});
+					
+
+				} else {
+					//아닐때 이벤트
+				}
 
 				if (closeToBottom) {
+					
 					// Get the first then items from the grid, clone them, and add them to the bottom of the grid
 					/*
 					var $items = $('li', $tiles),

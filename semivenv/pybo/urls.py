@@ -9,7 +9,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('', views.index), 
-    path('test', views.index2),
+    path('test', views.index2, name='test'),
     path('crawling', views.reviewCrawling),
     path('crawling2', views.reviewCrawling2),
     

@@ -1,0 +1,35 @@
+{% load static %}
+{% for mov in MovieInfo %}
+<li onclick="location.href='single-page.html';">
+    <img src="{{mov.img}}" width="282" height="118">
+    <div class="post-info">
+        <div class="post-basic-info">
+            <h3><a href="#">Animation films</a></h3>
+            <span><a href="#"><label> </label>Movies</a></span>
+            <p>---paging-----{{mov.review}}</p>
+        </div>
+        <div class="post-info-rate-share">
+            <div class="rateit">
+                {% if mov.star >= 9 %}
+                <img src="{% static 'images/001.png' %}" title="5stars" />
+                {% elif mov.star >= 7 %}
+                <img src="{% static 'images/002.png' %}" title="4stars" />
+                {% elif mov.star >= 5 %}
+                <img src="{% static 'images/003.png' %}" title="3stars" />
+                {% elif mov.star >= 3 %}
+                <img src="{% static 'images/004.png' %}" title="2stars" />
+                {% elif mov.star >= 1 %}
+                <img src="{% static 'images/005.png' %}" title="1stars" />
+                {% else %}
+                <img src="{% static 'images/006.png' %}" title="0stars" />
+                {% endif%}
+                <!--<span> </span>-->
+            </div>
+            <div class="post-share">
+                <span> </span>
+            </div>
+            <div class="clear"> </div>
+        </div>
+    </div>
+</li>
+{% endfor %}
