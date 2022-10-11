@@ -8,9 +8,10 @@ class review(models.Model):
     index = models.IntegerField()   # index
     review = models.TextField()     # 리뷰
     star = models.IntegerField()    # 별점
-    emoji = models.CharField(max_length=20) # 이모티콘 긍정/부정
-    img = models.TextField() # 이미지 서버 경로 
+    emoji = models.CharField(max_length=20, null=True) # 이모티콘 긍정/부정
+    img = models.TextField(null=True) # 이미지 서버 경로 
     create_date = models.DateTimeField()
+    viewIdx = models.IntegerField(null=True)   # 전시 순서
 
 
 class POST(models.Model):

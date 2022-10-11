@@ -13,6 +13,7 @@ pip install requests
 """
 
 import pandas as pd
+import numpy as np
 import selenium
 import chromedriver_autoinstaller
 import re
@@ -42,9 +43,10 @@ def reviewCrawling() :
     # 창 숨기는 옵션 추가
     option.add_argument("headless")
     
-    #import chromedriver_autoinstaller
-    # chrome_path = chromedriver_autoinstaller.install()
     chrome_path = ''
+    #import chromedriver_autoinstaller
+    chrome_path = chromedriver_autoinstaller.install()
+    
     if chrome_path is None or chrome_path == '' :
         # chrome_path = 'C:\\venvs\\venvsemi\\lib\\site-packages\\chromedriver_autoinstaller\\105\\chromedriver.exe'
         chrome_path = 'C:\\venvs\\venvsemi\\lib\\site-packages\\chromedriver_autoinstaller\\106\\chromedriver.exe'
@@ -52,7 +54,7 @@ def reviewCrawling() :
     driver = webdriver.Chrome(chrome_path, options=option)
 
     mvdf = pd.DataFrame(columns=['mvcode', 'index', 'imgpath'])
-    df = pd.DataFrame(columns=['mvRank','mvcode', 'mvNm', 'index', 'review', 'star', 'emoji', 'img', 'create_date'])
+    df = pd.DataFrame(columns=['mvRank','mvcode', 'mvNm', 'index', 'review', 'star', 'emoji', 'img', 'create_date', 'viewIdx'])
     today = timezone.now()
 
     try:
@@ -168,7 +170,7 @@ def reviewCrawling() :
             
         '''
         mvRank = 0 
-
+        totalCount = 0
         Data = []
         for code, title in zip(mvcodes, mvtitles):
             mvRank += 1
@@ -182,6 +184,7 @@ def reviewCrawling() :
                 review = soup.select("div.score_result > ul > li") # '관람객' 요소가 삭제된 해당 요소 선택 후 추출
 
                 for i in review:
+                    totalCount += 1
                     mvidx += 1
                     point = i.select_one('.star_score > em').text.strip() # 평점
                     ment = i.select_one('.score_reple span[id^=_filtered_ment_]').text.strip().replace('\t',"") # 리뷰 내용 개행(공백)문자 삭제
@@ -217,9 +220,11 @@ def reviewCrawling() :
         
         reviewModel.objects.all().delete()
 
+        numbers = list(np.random.choice(range(totalCount), totalCount, replace=False))
+
         for i in range(len(df)) :
             data = df.iloc[i]
-            r = reviewModel(mvRank=data['mvRank'], mvcode=data['mvcode'], mvNm=data['mvNm'], index=data['index'], review=data['review'], star=data['star'], emoji=data['emoji'], img=data['img'], create_date=today)
+            r = reviewModel(mvRank=data['mvRank'], mvcode=data['mvcode'], mvNm=data['mvNm'], index=data['index'], review=data['review'], star=data['star'], emoji=data['emoji'], img=data['img'], create_date=today, viewIdx=numbers[i])
             r.save()
         
         print('----- NaverCrawling 22222 -----')
