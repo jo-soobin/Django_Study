@@ -7,6 +7,9 @@ import pandas as pd
 from .models import review
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
+import logging
+
+logger = logging.getLogger('my')
 
 def index(request):
     
@@ -18,6 +21,7 @@ def index(request):
 
 @csrf_exempt
 def index2(request):
+    logger.info("INFO 레벨로 출력")
     print('kjy test -------------'+request.method)
     if request.method == 'POST':
         page = request.POST.get('page', '1')

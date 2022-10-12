@@ -24,7 +24,7 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as bs
 from django.utils import timezone
 from pybo.models import review as reviewModel
-from . import emoji
+
 
 # BeautifulSoup은 response.text를 통해 가져온 HTML 문서를 탐색해서 원하는 부분을 뽑아내는 역할 (컴퓨터가 이해할 수 있는 html 언어로 변경)
 
@@ -72,20 +72,22 @@ def reviewCrawling() :
         driver.get("https://movie.naver.com/movie/running/current.naver?view=list&tab=normal&order=point")
 
         # <li> 리스트 만들기
-        movies = []
-        m = 0
+        movies_review = []
+        m_reivew = 0
 
         li = driver.find_elements(By.CSS_SELECTOR, ".lst_detail_t1 li")
 
         # 이미지 없는 영화 예외처리
         for i in li:
-            if m < 20 and i.find_element(By.CSS_SELECTOR, "a img").get_attribute("alt") !="이미지 준비중입니다.":
-                movies.append(i)
-                m += 1
+            if m_reivew < 20 and i.find_element(By.CSS_SELECTOR, "a img").get_attribute("alt") !="이미지 준비중입니다.":
+                movies_review.append(i)
+                m_reivew += 1
+        
+        print('image Crawling Start--')
 
         # 각 영화 페이지, 제목 리스트 저장하기
         mvcodes, mvtitles = [], []
-        for movie in movies:
+        for movie in movies_review:
             
             tmp_title = movie.find_element(By.CSS_SELECTOR,'a img').get_attribute('alt')
             mvtitles.append(tmp_title)
@@ -102,7 +104,7 @@ def reviewCrawling() :
             a_index = 0
             
             driver.get("https://movie.naver.com/movie/bi/mi/photoView.naver?code="+ code) # 포토 화면 
-            
+            print('code test : '+code)
             next_btn = driver.find_elements(By.CSS_SELECTOR,'#photo_area > div > div.img_src._img_area > div > div > a.pic_next._photo_next._NoOutline')[0]
             
             
@@ -138,7 +140,7 @@ def reviewCrawling() :
         """
          ---- 이미지 크롤링
         """
-
+        print('image Crawling End--')
 
         """
         # 텍스트 크롤링
@@ -176,7 +178,18 @@ def reviewCrawling() :
         for code, title in zip(mvcodes, mvtitles):
             mvRank += 1
             mvidx = 0
-            for i in range(1,6): # 1~6 페이지 리뷰 수집
+
+            res = req.get('https://movie.naver.com/movie/bi/mi/pointWriteFormList.naver?code=' + code + '&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false&page=1')
+            soup = bs(res.text, 'lxml')  # lxml은 구문을 분석하기 위한 파서(parser) # html 형식으로 변환
+            endIdx = 1
+            totalReviewCount = soup.select_one('.score_total em').text.strip().replace(',',"")
+            if totalReviewCount.isdigit() :
+                totalReviwNum = int(totalReviewCount)
+
+            tmpRN = max(1, totalReviwNum//10)
+            maxPage = min(6, tmpRN+1)
+
+            for i in range(1,maxPage): # 1~6 페이지 리뷰 수집
                 res = req.get('https://movie.naver.com/movie/bi/mi/pointWriteFormList.naver?code=' + code + '&type=after&isActualPointWriteExecute=false&isMileageSubscriptionAlready=false&isMileageSubscriptionReject=false&page=' + str(i))
                 soup = bs(res.text, 'lxml')  # lxml은 구문을 분석하기 위한 파서(parser) # html 형식으로 변환
                 viewer = soup.select('span.ico_viewer') # '관람객' 요소 선택
@@ -196,14 +209,10 @@ def reviewCrawling() :
                     else :
                         imgtmp = 'https://ssl.pstatic.net/static/movie/2012/06/dft_img203x290.png'
                     
-                    if i == 0 :
-                        mvemoji = 0
-                    else :
-                        mvemoji = emoji.sentiment_predict(ment) #이모티콘 import 해서 0 부정 1 긍정
-                    print(mvemoji)
-
                     mvemo = 1
-                    if int(point) < 5 :
+                    emReq = emojiReq(ment) #이모티콘 request 통신 0 부정 1 긍정
+                    print(' emoji request : ' , totalCount,  mvRank , code , emReq)
+                    if emReq == '0' :
                         mvemo = 0
                     
                     tmp = pd.DataFrame({'mvRank':[mvRank], 'mvcode':[code], 'mvNm':[title], 'index':[mvidx], 'review':[ment], 'star':[point], 'emoji':[mvemo], 'img':[imgtmp], 'create_date':[today]})
@@ -240,3 +249,10 @@ def reviewCrawling() :
         print('에러가 발생 했습니다', ex)
         driver.quit()
 
+
+def emojiReq(sentence) :
+    url = 'http://localhost:5000/?sentence='+sentence
+    response = req.get(url)
+    resJson = response.json()
+
+    return resJson['emojiResult']
