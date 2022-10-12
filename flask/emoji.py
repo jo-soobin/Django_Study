@@ -57,7 +57,6 @@ def index() :
         result = '1'
     
     return {'emojiResult' : result}
-
     
 
 if __name__=="__main__":
