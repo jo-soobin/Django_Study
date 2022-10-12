@@ -8,7 +8,7 @@ from django.conf import settings
 
 
 urlpatterns = [
-    path('', views.index), 
+    path('', views.index, name='main'), 
     path('test', views.index2, name='test'),
     path('crawling', views.reviewCrawling),
     path('crawling2', views.reviewCrawling2),
