@@ -1,6 +1,6 @@
 {% load static %}
 {% for mov in MovieInfo %}
-    <li onclick="location.href='single-page.html';">
+    <li onclick="location.href='https://movie.naver.com/movie/bi/mi/basic.naver?code={{mov.mvcode}}';">
         <img src="{{mov.img}}" style="max-width: 100%; height: auto;"> 
         <div class="post-info">
             <div class="post-basic-info">
