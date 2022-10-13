@@ -32,6 +32,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		</script>
 		<script type="text/javascript">
 			paging = 1
+			var flag = true;
 			var $ = jQuery.noConflict();
 			$(function () {
 				$('#activator').click(function () {
@@ -96,25 +97,26 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<body>
 		<!---start-wrap---->
 		<!---start-header---->
+
 		<div class="header">
 			<div class="wrap">
-			<div class="logo">
-				<a href="index.html"><img src="{% static 'images/newlogo.png' %}" title="dbjj" /></a>
-				<div class="menu_box_list">
-					<ul>
-						<li><a href="http://localhost/pybo/crawling2"><span>Update New Review</span></a></li>
-						<li><a href="https://github.com/jo-soobin/Django_Study"><span>Team GitHub</span></a></li>
-						<li><a href="https://www.notion.so/5-10281aba2f2a4a9aab88fe2f291fc2b8"><span>Team Notion</span></a></li>
-						<li><a href="https://movie.naver.com/"><span>Naver Movie</span></a></li>
-						<li><a href="https://www.kobis.or.kr/kobis/business/stat/boxs/findDailyBoxOfficeList.do"><span>Box Office</span></a></li>
-						<li><a href="http://www.cgv.co.kr/ticket/"><span>CGV</span></a></li>
-						<div class="clear"> </div>
-					</ul>
-				</div>
-			</div>    	  
-			<div class="clear"> </div>
+				<div class="logo">
+					<a href="index.html"><img src="{% static 'images/newlogo.png' %}" title="dbjj" /></a>
+					<div class="menu_box_list">
+						<ul>
+							<li><a href="http://localhost/pybo/crawling2"><span>Update New Review</span></a></li>
+							<li><a href="https://github.com/jo-soobin/Django_Study"><span>Team GitHub</span></a></li>
+							<li><a href="https://www.notion.so/5-10281aba2f2a4a9aab88fe2f291fc2b8"><span>Team Notion</span></a></li>
+							<li><a href="https://movie.naver.com/"><span>Naver Movie</span></a></li>
+							<li><a href="https://www.kobis.or.kr/kobis/business/stat/boxs/findDailyBoxOfficeList.do"><span>Box Office</span></a></li>
+							<li><a href="http://www.cgv.co.kr/ticket/"><span>CGV</span></a></li>
+							<div class="clear"> </div>
+						</ul>
+					</div>
+				</div>    	  
+				<div class="clear"> </div>
+			</div>
 		</div>
-	</div>
 					<!---
 					<span>{% for mov in MovieInfo %}
 						{{mov.mvRank}}<br>
@@ -140,7 +142,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<ul id="tiles">
 						<!-- These are our grid blocks -->
 						{% for mov in MovieInfo %}
-						<li onclick="location.href='single-page.html';">
+						<li onclick="location.href='https://movie.naver.com/movie/bi/mi/basic.naver?code={{mov.mvcode}}';">
 							<img src="{{mov.img}}" style="max-width: 100%; height: auto;"> 
 							<div class="post-info">
 								<div class="post-basic-info">
@@ -224,22 +226,29 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 					var scrT = ($window).scrollTop();
 					
-					if(scrT > ($document).height() - ($window).height() - 10){
+					if(scrT > ($document).height() - ($window).height() - 100){
 						//스크롤이 끝에 도달했을때 실행될 이벤트
-						paging += 1;
-						$.ajax({
-							type:'post',
-							url:'{% url "main" %}',
-							data : { 'page':paging },
-							success:function(data){
-								$tiles.append(data);
+						if(flag) {
+							paging += 1;
+							flag = false;
+							$.ajax({
+								type:'post',
+								url:'{% url "main" %}',
+								data : { 'page':paging },
+								success:function(data){
+									$tiles.append(data);
 
-								applyLayout();
+									applyLayout();
 
-								emojiChange();
-
-							}
-						});
+									emojiChange();
+									
+									flag = true;
+								}, error: function() {
+									flag = true;
+								}
+							});
+						}
+						
 						
 
 					} else {
