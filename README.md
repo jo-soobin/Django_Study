@@ -9,7 +9,9 @@
 
 #### How to use?
 1. 관리자권한 명령 프롬프트 켜기
-2. httpd -k start (Apache 서버 실행)
+2. `httpd -k start` (Apache 서버 실행)
 3. 새 명령 프롬프트 켜기
 4. 사전에 만들어둔 가상환경 진입
 5. emoji.py 가 저장된 위치로 이동하여 python emoji.py로 Flask 실행
+6. `localhost/pybo` 접속
+7. `localhost/pybo/crawling2` 새 Data 크롤링 페이지
