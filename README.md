@@ -15,3 +15,5 @@
 5. emoji.py 가 저장된 위치로 이동하여 python emoji.py로 Flask 실행
 6. `localhost/pybo` 접속
 7. `localhost/pybo/crawling2` 새 Data 크롤링 페이지
+
+<img src='docs/PPT/리뷰티콘_최종_29.png'>
